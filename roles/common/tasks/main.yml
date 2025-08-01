@@ -1,0 +1,11 @@
+- name: Update and install git
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+- name: Clone app repo
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ app_directory }}"
+    force: yes
