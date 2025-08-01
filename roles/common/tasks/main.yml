@@ -1,10 +1,9 @@
-- name: Update and install git
+- name: Install base dependencies
   apt:
-    name: git
-    state: present
+    name: ['git', 'curl']
     update_cache: yes
 
-- name: Clone app repo
+- name: Clone application repo
   git:
     repo: "{{ repo_url }}"
     dest: "{{ app_directory }}"
