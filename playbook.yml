@@ -1,12 +1,21 @@
-- name: Deploy YOLO E-commerce Application with Ansible
-  hosts: all
-  become: yes
+- name: Deploy Khalifa E-Commerce App
+  hosts: webservers
+  become: true
   vars_files:
     - group_vars/all.yml
 
   roles:
-    - common
-    - docker
-    - database
-    - backend
-    - frontend
+    - { role: common, tags: ['setup', 'repo'] }
+    - { role: docker, tags: ['docker'] }
+    - { role: database, tags: ['mongo'] }
+    - { role: backend, tags: ['backend'] }
+    - { role: frontend, tags: ['frontend'] }
+
+  post_tasks:
+    - name: Verify container status
+      shell: docker ps
+      register: container_status
+
+    - name: Show container status
+      debug:
+        var: container_status.stdout_lines
