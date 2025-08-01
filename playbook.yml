@@ -1,21 +1,34 @@
-- name: Deploy Khalifa E-Commerce App
+- name: Deploy Application with Ansible
   hosts: webservers
-  become: true
+  become: yes
   vars_files:
     - group_vars/all.yml
 
+  pre_tasks:
+    - name: Show initial config
+      debug:
+        msg:
+          - "App: {{ app_name }}"
+          - "Cloning from: {{ repo_url }}"
+      tags: ['always']
+
   roles:
-    - { role: common, tags: ['setup', 'repo'] }
-    - { role: docker, tags: ['docker'] }
-    - { role: database, tags: ['mongo'] }
-    - { role: backend, tags: ['backend'] }
-    - { role: frontend, tags: ['frontend'] }
+    - role: setup
+      tags: ['setup']
+    - role: docker
+      tags: ['docker']
+    - role: database
+      tags: ['db']
+    - role: backend
+      tags: ['api']
+    - role: frontend
+      tags: ['web']
 
   post_tasks:
-    - name: Verify container status
-      shell: docker ps
-      register: container_status
+    - name: Validate running containers
+      shell: docker ps --format "table {{ '{{.Names}}' }}\t{{ '{{.Status}}' }}"
+      register: containers
 
     - name: Show container status
       debug:
-        var: container_status.stdout_lines
+        var: containers.stdout_lines
