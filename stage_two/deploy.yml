@@ -1,21 +1,56 @@
-- name: Provision Infra and Deploy App
+---
+- name: Stage 2 - Provision Infra with Terraform and Configure with Ansible
   hosts: localhost
-  gather_facts: no
-
+  gather_facts: false
+  vars:
+    terraform_dir: "{{ playbook_dir }}/terraform"
+    playbook_to_import: "{{ playbook_dir }}/../playbook.yml"
+  
   tasks:
-    - name: Terraform up
-      terraform:
-        project_path: stage_two/terraform
-        force_init: yes
-        state: present
+    - name: 🔍 Display Stage 2 Deployment Info
+      debug:
+        msg:
+          - "🚀 Starting Stage 2 Deployment"
+          - "📁 Terraform Directory: {{ terraform_dir }}"
+          - "📜 Ansible Playbook: {{ playbook_to_import }}"
+      tags: ['always']
 
-    - name: Add VM to dynamic inventory
+    - name: 🧱 Run Terraform to Provision Infrastructure
+      community.general.terraform:
+        project_path: "{{ terraform_dir }}"
+        state: present
+        force_init: true
+      register: terraform_output
+      tags: ['terraform', 'provision']
+
+    - name: 📦 Show Terraform Output
+      debug:
+        msg:
+          - "🌐 VM IP Address: {{ terraform_output.outputs.vm_ip.value }}"
+          - "🖥️  VM Hostname: {{ terraform_output.outputs.vm_name.value }}"
+          - "🌍 Frontend URL: {{ terraform_output.outputs.application_urls.value.frontend }}"
+          - "🛠️ Backend URL: {{ terraform_output.outputs.application_urls.value.backend }}"
+      tags: ['terraform', 'provision']
+
+    - name: ⏳ Wait for SSH to Become Available
+      wait_for:
+        host: "{{ terraform_output.outputs.vm_ip.value }}"
+        port: 22
+        delay: 15
+        timeout: 300
+      tags: ['provision']
+
+    - name: ➕ Add Provisioned VM to Inventory
       add_host:
-        name: dynamic-vm
-        ansible_host: 192.168.100.20
+        hostname: "{{ terraform_output.outputs.vm_ip.value }}"
         groups: webservers
         ansible_user: vagrant
-        ansible_ssh_private_key_file: .vagrant/machines/default/virtualbox/private_key
+        ansible_ssh_private_key_file: "{{ terraform_dir }}/.vagrant/machines/default/virtualbox/private_key"
         ansible_python_interpreter: /usr/bin/python3
+      tags: ['provision']
 
-- import_playbook: ../playbook.yml
+# Second Playbook Call: Import Stage 1 Ansible Playbook and Apply Configuration
+- name: ⚙️ Configure and Deploy Application with Ansible
+  import_playbook: "{{ playbook_to_import }}"
+  tags: ['ansible', 'configuration']
+
