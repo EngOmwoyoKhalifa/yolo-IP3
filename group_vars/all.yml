@@ -1,5 +1,5 @@
 app_name: yolo-shop
-repo_url: https://github.com/EngOmwoyoKhalifa/yolo.git
+repo_url: git@github.com:EngOmwoyoKhalifa/yolo.git
 app_directory: /home/vagrant/yolo
 app_user: vagrant
 

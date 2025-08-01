@@ -1,0 +1,19 @@
+- name: Ensure dependencies are present
+  apt:
+    name:
+      - git
+      - curl
+      - python3
+    update_cache: yes
+
+- name: Create app directory
+  file:
+    path: "{{ app_directory }}"
+    state: directory
+
+- name: Clone application repository
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ app_directory }}"
+    version: main
+    force: yes
