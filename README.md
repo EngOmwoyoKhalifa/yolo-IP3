@@ -153,3 +153,8 @@ docker logs frontend
 GitHub: [@EngOmwoyoKhalifa](https://github.com/EngOmwoyoKhalifa)
 
 ---
+
+<img width="1920" height="1200" alt="vagrant4" src="https://github.com/user-attachments/assets/19134fc9-d854-44d7-8139-13e9bcb7f449" />
+<img width="1920" height="1200" alt="vagrant3" src="https://github.com/user-attachments/assets/21b9177a-e656-42ef-a7bf-d9db3ccfbc42" />
+<img width="1920" height="1200" alt="vagrant2" src="https://github.com/user-attachments/assets/c5aef580-bba8-47ce-ba7e-fa4e8db296d1" />
+<img width="1920" height="1200" alt="vagrant" src="https://github.com/user-attachments/assets/84e59a17-762d-48de-9246-b431fb7beccd" />
