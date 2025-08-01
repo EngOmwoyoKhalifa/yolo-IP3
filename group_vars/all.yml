@@ -1,15 +1,17 @@
-app_name: khalifa-ecommerce
-repo_url: https://github.com/EngOmwoyoKhalifa/yolo-IP2.git
-app_directory: /home/vagrant/app
+app_name: yolo-shop
+repo_url: https://github.com/EngOmwoyoKhalifa/yolo.git
+app_directory: /home/vagrant/yolo
+app_user: vagrant
+
 docker_compose_version: "1.29.2"
 
+mongodb_container_name: mongo-db
 mongodb_port: 27017
+
+backend_container_name: api-service
 backend_port: 5000
+backend_image: backend-custom
+
+frontend_container_name: ui-client
 frontend_port: 3000
-
-mongodb_container_name: mongo_db
-backend_container_name: node_api
-frontend_container_name: react_client
-
-backend_image: khalifa/backend
-frontend_image: khalifa/frontend
+frontend_image: frontend-custom
